@@ -18,10 +18,22 @@ const urlDatabase = {
 };
 
 app.get('/urls', (req, res) => {
+<<<<<<< HEAD
   const templateVars = { urls: urlDatabase, username: req.cookies["username"] }
+=======
+  const templateVars = { 
+    urls: urlDatabase,
+    username: req.cookies['username'] 
+  }
+
+>>>>>>> 3772028c3792efaa6889115549d95110bfaafd30
   res.render('urls_index', templateVars);
 });
 
+app.post("/login", (req, res) => {
+  res.cookie('username', req.body.username);
+  res.redirect('/urls');
+});
 
 app.get('/', (req, res) => {
   res.send('Hello!');
@@ -42,17 +54,31 @@ app.get('/hello', (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
+<<<<<<< HEAD
   const templateVars = {
     username: req.cookies["username"],
   };
+=======
+  const templateVars = { 
+    username: req.cookies['username'] 
+  }
+
+>>>>>>> 3772028c3792efaa6889115549d95110bfaafd30
   res.render("urls_new", templateVars);
 });
 
 app.get('/urls/:shortURL', (req, res) => {
+<<<<<<< HEAD
   const templateVars = {
     shortURL: req.params.shortURL,
     longURL: urlDatabase[req.params.shortURL],
     username: req.cookies["username"],
+=======
+  const templateVars = { 
+    shortURL: req.params.shortURL, 
+    longURL: urlDatabase[req.params.shortURL], 
+    username: req.cookies['username']
+>>>>>>> 3772028c3792efaa6889115549d95110bfaafd30
   };
 
   res.render("urls_show", templateVars);
