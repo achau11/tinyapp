@@ -1,10 +1,12 @@
 const express = require('express');
 const bodyParser = require("body-parser");
+const cookieParser = require('cookie-parser');
 const app = express();
 const PORT = 8080;
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(cookieParser());
 
 function generateRandomString() {
   return Math.random().toString(36).substr(2, 6);
@@ -20,6 +22,10 @@ app.get('/urls', (req, res) => {
   res.render('urls_index', templateVars);
 });
 
+app.post("/login", (req, res) => {
+  res.cookie('username', req.body.username);
+  res.redirect('/urls');
+});
 
 app.get('/', (req, res) => {
   res.send('Hello!');
