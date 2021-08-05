@@ -12,10 +12,21 @@ function generateRandomString() {
   return Math.random().toString(36).substr(2, 6);
 }
 
+const userExists = function(email){
+  for (const user in users) {
+    if (users[user].email === email){
+      return true;
+    }
+  } 
+  return false;
+};
+
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
+
+const users = {};
 
 app.get('/urls', (req, res) => {
   const templateVars = { 
@@ -88,6 +99,25 @@ app.post("/urls/:shortURL", (req, res) => {
   urlDatabase[req.params.shortURL] = req.body.newURL;
   res.redirect('/urls');
 });
+
+app.post('/register', (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+
+  if (!email || !password) {
+    res.send(400, 'Email and password required');
+  };
+
+  if (userExists(email)){
+    res.send(400, 'User already exists')
+  };
+
+  const id = generateRandomString();
+  users[id] = { id, email, password };
+
+  res.cookie('user_id', id);
+  res.redirect('urls');
+})
 
 app.post("/login", (req, res) => {
   const username = req.body.username;
