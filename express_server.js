@@ -12,6 +12,17 @@ function generateRandomString() {
   return Math.random().toString(36).substr(2, 6);
 }
 
+// Function to return urls based on user ID.
+const urlsForUser = function(id) {
+  const urls = {};
+  for (const shortURL in urlDatabase) {
+    if (urlDatabase[shortURL].userID === id){
+      urls[shortURL] = urlDatabase[shortURL];
+    }
+  }
+  return urls;
+}
+
 const userExists = function(email){
   for (const user in users) {
     if (users[user].email === email){
@@ -22,16 +33,22 @@ const userExists = function(email){
 };
 
 const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  b6UTxQ: {
+      longURL: "https://www.tsn.ca",
+      userID: "aJ48lW"
+  },
+  i3BoGr: {
+      longURL: "https://www.google.ca",
+      userID: "aJ48lW"
+  }
 };
 
 const users = {};
 
 app.get('/urls', (req, res) => {
   const templateVars = { 
-    urls: urlDatabase,
-    user: users[req.cookies["user_id"]]
+    urls: urlsForUser(req.cookies['user_id']),
+    user: users[req.cookies['user_id']]
   }
 
   res.render('urls_index', templateVars);
@@ -54,7 +71,10 @@ app.get('/urls.json', (req, res) => {
 
 app.post("/urls", (req, res) => {
   const shortURL = generateRandomString();
-  urlDatabase[shortURL] = req.body.longURL;
+  urlDatabase[shortURL] = {
+    longURL: req.body.longURL,
+    userID: req.cookies['user_id']
+  }
   res.redirect(`urls/${shortURL}`);
 });
 
@@ -77,15 +97,16 @@ app.get("/urls/new", (req, res) => {
 app.get('/urls/:shortURL', (req, res) => {
   const templateVars = { 
     shortURL: req.params.shortURL, 
-    longURL: urlDatabase[req.params.shortURL], 
-    user: users[req.cookies["user_id"]]
+    longURL: urlDatabase[req.params.shortURL].longURL, 
+    user: users[req.cookies["user_id"]],
+    urlUserID: urlDatabase[req.params.shortURL].userID
   };
 
   res.render("urls_show", templateVars);
 });
 
 app.get("/u/:shortURL", (req, res) => {
-  const longURL = urlDatabase[req.params.shortURL];
+  const longURL = urlDatabase[req.params.shortURL].longURL;
   res.redirect(longURL);
 });
 
