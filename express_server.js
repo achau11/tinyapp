@@ -1,12 +1,9 @@
 const express = require('express');
 const bodyParser = require("body-parser");
 const cookieSession = require('cookie-session');
-<<<<<<< HEAD
 
 const { getUserByEmail } = require('./helpers');
 
-=======
->>>>>>> f4da57b88c9cbd7500279eee1860dc2d5c46081c
 const bcrypt = require('bcrypt');
 const app = express();
 const PORT = 8080;
@@ -15,11 +12,7 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieSession({
   name: 'session',
-<<<<<<< HEAD
-  keys: ['key1', 'key2']
-=======
   keys: ['key1', 'key2'],
->>>>>>> f4da57b88c9cbd7500279eee1860dc2d5c46081c
 }));
 
 function generateRandomString() {
@@ -38,18 +31,6 @@ const urlsForUser = function(id) {
   return urls;
 }
 
-<<<<<<< HEAD
-=======
-const getUserByEmail = function(email, database){
-  for (const user in database) {
-    if (database[user].email === email){
-      return database[user];
-    }
-  } 
-  return false;
-};
-
->>>>>>> f4da57b88c9cbd7500279eee1860dc2d5c46081c
 const urlDatabase = {
   b6UTxQ: {
       longURL: "https://www.tsn.ca",
@@ -175,12 +156,7 @@ app.post('/register', (req, res) => {
   users[id] = { id, email, password };
 
   req.session.user_id = id;
-<<<<<<< HEAD
   res.redirect('urls');
-=======
-  console.log(users);
-  res.redirect('/urls');
->>>>>>> f4da57b88c9cbd7500279eee1860dc2d5c46081c
 })
 
 app.post("/login", (req, res) => {
@@ -188,16 +164,10 @@ app.post("/login", (req, res) => {
   const enteredPass= req.body.password;
   const id = getUserByEmail(email, users);
 
-<<<<<<< HEAD
   if (!getUserByEmail(email, users)){
     res.send(403, 'Account not found.');
   } 
   const userId = getUserByEmail(email, users);
-=======
-  if (!id){
-    res.send(403, 'Account not found.');
-  } 
->>>>>>> f4da57b88c9cbd7500279eee1860dc2d5c46081c
 
   if(!bcrypt.compareSync(enteredPass, id.password)) {
       res.send(403, 'Wrong Password');
@@ -205,12 +175,9 @@ app.post("/login", (req, res) => {
     req.session.user_id = id;
     res.redirect('/urls');
   }
-<<<<<<< HEAD
 
   req.session.user_id = userId;
   res.redirect('/urls');
-=======
->>>>>>> f4da57b88c9cbd7500279eee1860dc2d5c46081c
 });
 
 app.post("/logout", (req, res) => {

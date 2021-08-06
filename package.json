@@ -21,10 +21,6 @@
   "dependencies": {
     "bcrypt": "^5.0.1",
     "body-parser": "^1.19.0",
-<<<<<<< HEAD
-=======
-    "cookie-parser": "^1.4.5",
->>>>>>> f4da57b88c9cbd7500279eee1860dc2d5c46081c
     "cookie-session": "^1.4.0",
     "ejs": "^3.1.6",
     "express": "^4.17.1"
