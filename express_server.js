@@ -19,6 +19,7 @@ function generateRandomString() {
 // Function to return urls based on user ID.
 const urlsForUser = function(id) {
   const urls = {};
+
   for (const shortURL in urlDatabase) {
     if (urlDatabase[shortURL].userID === id){
       urls[shortURL] = urlDatabase[shortURL];
@@ -27,10 +28,10 @@ const urlsForUser = function(id) {
   return urls;
 }
 
-const userExists = function(email){
-  for (const user in users) {
-    if (users[user].email === email){
-      return users[user].id;
+const getUserByEmail = function(email, database){
+  for (const user in database) {
+    if (database[user].email === email){
+      return database[user];
     }
   } 
   return false;
@@ -87,15 +88,14 @@ app.get('/hello', (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  const templateVars = { 
-    user: users[req.session.user_id],
-  }
-
   if (!req.session.user_id) {
     res.redirect('/login');
+  } else {
+    const templateVars = { 
+      user: users[req.session.user_id],
+    }
+    res.render('urls_new', templateVars);
   }
-
-  res.render('urls_new', templateVars);
 });
 
 app.get('/urls/:shortURL', (req, res) => {
@@ -116,7 +116,7 @@ app.get("/u/:shortURL", (req, res) => {
 
 app.get("/login", (req, res) => {
   let templateVars = {
-    user: users[req.cookies["user_id"]],
+    user: users[req.session.user_id],
   };
   res.render("urls_login", templateVars);
 });
@@ -153,7 +153,7 @@ app.post('/register', (req, res) => {
     res.send(400, 'Email and password required');
   };
 
-  if (userExists(email)){
+  if (getUserByEmail(email, users)){
     res.send(400, 'User already exists')
   };
 
@@ -161,28 +161,29 @@ app.post('/register', (req, res) => {
   users[id] = { id, email, password };
 
   req.session.user_id = id;
-  res.redirect('urls');
+  console.log(users);
+  res.redirect('/urls');
 })
 
 app.post("/login", (req, res) => {
   const email = req.body.email;
   const enteredPass= req.body.password;
+  const id = getUserByEmail(email, users);
 
-  if (!userExists(email)){
+  if (!id){
     res.send(403, 'Account not found.');
   } 
-  const userId = userExists(email);
 
-  if(!bcrypt.compareSync(enteredPass, users[userId].password)) {
+  if(!bcrypt.compareSync(enteredPass, id.password)) {
       res.send(403, 'Wrong Password');
+  } else {
+    req.session.user_id = id;
+    res.redirect('/urls');
   }
-
-  req.session.user_id = userId;
-  res.redirect('/urls');
 });
 
 app.post("/logout", (req, res) => {
-  res.session = null;
+  req.session = null;
   res.redirect('/urls');
 });
 
