@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser');
+const bcrypt = require('bcrypt');
 const app = express();
 const PORT = 8080;
 
@@ -143,7 +144,7 @@ app.post("/urls/:shortURL", (req, res) => {
 
 app.post('/register', (req, res) => {
   const email = req.body.email;
-  const password = req.body.password;
+  const password = bcrypt.hashSync(req.body.password, 10);
 
   if (!email || !password) {
     res.send(400, 'Email and password required');
@@ -162,14 +163,14 @@ app.post('/register', (req, res) => {
 
 app.post("/login", (req, res) => {
   const email = req.body.email;
-  const password = req.body.password;
+  const enteredPass= req.body.password;
 
   if (!userExists(email)){
     res.send(403, 'Account not found.');
   } 
   const userId = userExists(email);
 
-  if(users[userId].password !== password) {
+  if(!bcrypt.compareSync(enteredPass, users[userId].password)) {
       res.send(403, 'Wrong Password');
   }
 
