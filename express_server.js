@@ -1,6 +1,9 @@
 const express = require('express');
 const bodyParser = require("body-parser");
 const cookieSession = require('cookie-session');
+
+const { getUserByEmail } = require('./helpers');
+
 const bcrypt = require('bcrypt');
 const app = express();
 const PORT = 8080;
@@ -26,15 +29,6 @@ const urlsForUser = function(id) {
   }
   return urls;
 }
-
-const userExists = function(email){
-  for (const user in users) {
-    if (users[user].email === email){
-      return users[user].id;
-    }
-  } 
-  return false;
-};
 
 const urlDatabase = {
   b6UTxQ: {
@@ -153,7 +147,7 @@ app.post('/register', (req, res) => {
     res.send(400, 'Email and password required');
   };
 
-  if (userExists(email)){
+  if (getUserByEmail(email, users)){
     res.send(400, 'User already exists')
   };
 
@@ -168,10 +162,10 @@ app.post("/login", (req, res) => {
   const email = req.body.email;
   const enteredPass= req.body.password;
 
-  if (!userExists(email)){
+  if (!getUserByEmail(email, users)){
     res.send(403, 'Account not found.');
   } 
-  const userId = userExists(email);
+  const userId = getUserByEmail(email, users);
 
   if(!bcrypt.compareSync(enteredPass, users[userId].password)) {
       res.send(403, 'Wrong Password');
