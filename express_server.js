@@ -15,7 +15,7 @@ function generateRandomString() {
 const userExists = function(email){
   for (const user in users) {
     if (users[user].email === email){
-      return true;
+      return users[user].id;
     }
   } 
   return false;
