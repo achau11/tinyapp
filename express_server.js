@@ -118,13 +118,27 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/urls/:shortURL/delete", (req, res) => {
-  delete urlDatabase[req.params.shortURL];
-  res.redirect('/urls');
+  const id = req.cookies['user_id'];
+  const urls = urlsForUser(id);
+
+  if (Object.keys(urls).includes(req.params.shortUrl)){
+    delete urlDatabase[req.params.shortUrl];
+    res.redirect('/urls');
+  } else {
+    res.send(401);
+  }
 });
 
-app.post("/urls/:shortURL", (req, res) => {
-  urlDatabase[req.params.shortURL] = req.body.newURL;
-  res.redirect('/urls');
+app.post("/urls/:shortURL", (req, res) => { 
+  const id = req.cookies['user_id'];
+  const urls = urlsForUser(id);
+
+  if (Object.keys(urls).includes(req.params.shortUrl)){
+    urlDatabase[req.params.shortURL] = req.body.newURL;
+    res.redirect('/urls');
+  } else {
+    res.send(401);
+  }
 });
 
 app.post('/register', (req, res) => {
