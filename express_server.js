@@ -37,11 +37,6 @@ app.get('/urls', (req, res) => {
   res.render('urls_index', templateVars);
 });
 
-app.post("/login", (req, res) => {
-  res.cookie('username', req.body.username);
-  res.redirect('/urls');
-});
-
 app.get('/', (req, res) => {
   res.send('Hello!');
 });
@@ -127,13 +122,24 @@ app.post('/register', (req, res) => {
 })
 
 app.post("/login", (req, res) => {
-  const username = req.body.username;
-  res.cookie('username', username);
+  const email = req.body.email;
+  const password = req.body.password;
+
+  if (!userExists(email)){
+    res.send(403, 'Account not found.');
+  } 
+  const userId = userExists(email);
+
+  if(users[userId].password !== password) {
+      res.send(403, 'Wrong Password');
+  }
+
+  res.cookie('user_id', userId);
   res.redirect('/urls');
 });
 
 app.post("/logout", (req, res) => {
-  res.clearCookie('username');
+  res.clearCookie('user_id');
   res.redirect('/urls');
 });
 
