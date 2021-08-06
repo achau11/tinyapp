@@ -162,22 +162,18 @@ app.post('/register', (req, res) => {
 app.post("/login", (req, res) => {
   const email = req.body.email;
   const enteredPass= req.body.password;
-  const id = getUserByEmail(email, users);
 
   if (!getUserByEmail(email, users)){
     res.send(403, 'Account not found.');
   } 
   const userId = getUserByEmail(email, users);
 
-  if(!bcrypt.compareSync(enteredPass, id.password)) {
+  if(!bcrypt.compareSync(enteredPass, users[userId].password)) {
       res.send(403, 'Wrong Password');
   } else {
-    req.session.user_id = id;
+    req.session.user_id = userId;
     res.redirect('/urls');
   }
-
-  req.session.user_id = userId;
-  res.redirect('/urls');
 });
 
 app.post("/logout", (req, res) => {
