@@ -166,17 +166,17 @@ app.post('/register', (req, res) => {
 
   if (!email || !req.body.password) {
     res.send(400, 'Email and password required');
-  };
-
-  if (getUserByEmail(email, users)){
+  
+  } else if (getUserByEmail(email, users)){
     res.send(400, 'User already exists')
-  };
-
-  const id = generateRandomString();
-  users[id] = { id, email, password };
-
-  req.session.user_id = id;
-  res.redirect('/urls');
+  
+  } else {
+    const id = generateRandomString();
+    users[id] = { id, email, password };
+  
+    req.session.user_id = id;
+    res.redirect('/urls');
+  }  
 })
 
 app.post("/login", (req, res) => {
