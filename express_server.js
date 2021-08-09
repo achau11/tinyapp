@@ -139,27 +139,24 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/urls/:shortURL/delete", (req, res) => {
-  const id = req.session.user_id;
-  const urls = urlsForUser(id);
+  const shortURL = req.params.shortURL;
 
-  if (Object.keys(urls).includes(req.params.shortURL)){
+  if (req.session.user_id && req.session.user_id === urlDatabase[shortURL].userID) {
     delete urlDatabase[req.params.shortURL];
     res.redirect('/urls');
   } else {
-    res.send(401);
+    res.send(401, 'You can not do that.');
   }
 });
 
 app.post("/urls/:shortURL", (req, res) => { 
-  const id = req.session.user_id;
-  const urls = urlsForUser(id);
+  const shortURL = req.params.shortURL;
   
-  if (Object.keys(urls).includes(req.params.shortURL)){
-    const shortURL = req.params.shortURL;
+  if (req.session.user_id && req.session.user_id === urlDatabase[shortURL].userID) {
     urlDatabase[shortURL].longURL = req.body.newURL;
-    res.redirect('/urls');
+    res.redirect('/urls');  
   } else {
-    res.send(401);
+    res.send(401, 'You can not do that.');
   }
 });
 
