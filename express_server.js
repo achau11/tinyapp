@@ -73,12 +73,19 @@ app.get('/urls.json', (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-  const shortURL = generateRandomString();
-  urlDatabase[shortURL] = {
-    longURL: req.body.longURL,
-    userID: req.session.user_id
+  if (req.session.user_id) {
+    const shortURL = generateRandomString();
+  
+    urlDatabase[shortURL] = {
+      longURL: req.body.longURL,
+      userID: req.session.user_id
+    }
+  
+    res.redirect(`urls/${shortURL}`);
+
+  } else {
+    res.status(401).send('You have to login to do that.');
   }
-  res.redirect(`urls/${shortURL}`);
 });
 
 app.get('/hello', (req, res) => {
