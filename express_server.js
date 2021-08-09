@@ -164,7 +164,7 @@ app.post('/register', (req, res) => {
   const email = req.body.email;
   const password = bcrypt.hashSync(req.body.password, 10);
 
-  if (!email || !password) {
+  if (!email || !req.body.password) {
     res.send(400, 'Email and password required');
   };
 
