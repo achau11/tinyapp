@@ -10,17 +10,7 @@
   <div class="card text-center">
       <div class="card-header"></div>
       <div class="card-body">
-
-        <% if (!user) { %>
-          <div class="alert alert-warning" role="alert">
-              Url isn't saved. Please login to view your urls.
-          </div>
-        <% } else if (user.id !== urlUserID) { %>
-          <div class="alert alert-warning" role="alert">
-              This is not your url.
-          </div>
-        <% } %>
-
+        
         <h5 class="card-title">TinyURL for: <%= longURL %></h5>
         <p class="card-text">Short URL: <a href="/u/<%= shortURL %>"target='_blank'><%= shortURL %></a></p>
         

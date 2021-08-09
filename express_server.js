@@ -44,6 +44,14 @@ const urlDatabase = {
 
 const users = {};
 
+app.get('/', (req, res) => {
+  if (req.session.userID) {
+    res.redirect('/urls');
+  }
+  
+  res.redirect('/login');
+});
+
 app.get('/urls', (req, res) => {
   const templateVars = { 
     urls: urlsForUser(req.session.user_id),
@@ -51,10 +59,6 @@ app.get('/urls', (req, res) => {
   }
 
   res.render('urls_index', templateVars);
-});
-
-app.get('/', (req, res) => {
-  res.send('Hello!');
 });
 
 app.get("/register", (req, res) => {
@@ -94,11 +98,18 @@ app.get("/urls/new", (req, res) => {
 
 app.get('/urls/:shortURL', (req, res) => {
   const templateVars = { 
+
     shortURL: req.params.shortURL, 
     longURL: urlDatabase[req.params.shortURL].longURL, 
     user: users[req.session.user_id],
     urlUserID: urlDatabase[req.params.shortURL].userID
+
   };
+  const urls = urlsForUser(req.session.user_id, urlDatabase);
+  
+  if (!req.session.user_id || !urls[req.params.shortURL]) {
+    res.send(404, 'This is not your URL.');
+  } 
 
   res.render("urls_show", templateVars);
 });
@@ -156,7 +167,7 @@ app.post('/register', (req, res) => {
   users[id] = { id, email, password };
 
   req.session.user_id = id;
-  res.redirect('urls');
+  res.redirect('/urls');
 })
 
 app.post("/login", (req, res) => {
