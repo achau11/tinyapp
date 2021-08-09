@@ -115,8 +115,13 @@ app.get('/urls/:shortURL', (req, res) => {
 });
 
 app.get("/u/:shortURL", (req, res) => {
-  const longURL = urlDatabase[req.params.shortURL].longURL;
-  res.redirect(longURL);
+  const shortURL = urlDatabase[req.params.shortURL];
+  
+  if (!shortURL) {
+    res.send(404, 'Short URL does not exist.');
+  }
+  
+  res.redirect(shortURL.longURL);
 });
 
 app.get("/login", (req, res) => {
