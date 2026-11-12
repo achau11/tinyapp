@@ -1,23 +1,29 @@
-# TinyApp Project
+# TinyApp
 
-TinyApp is a full stack web application built with Node and Express that allows users to shorten long URLs (à la bit.ly).
+**Node.js / Express URL shortener · Historical learning project**
 
-## Final Product
+A small full-stack application for registering an account, creating shortened URLs, and managing saved links. The server uses Express, EJS templates, and cookie-based sessions.
 
-!["Main Page"](https://github.com/xazzer81/tinyapp/blob/master/docs/img1.png)
+## Screenshots
 
-!["URL Page"](https://github.com/xazzer81/tinyapp/blob/master/docs/img2.png)
+| URL list | URL details |
+| --- | --- |
+| ![TinyApp overview](docs/img1.png) | ![TinyApp link details](docs/img2.png) |
 
-## Dependencies
+## Tech
 
-- Node.js
-- Express
-- EJS
-- bcrypt
-- body-parser
-- cookie-session
+- Node.js and Express
+- EJS server-rendered views
+- Cookie sessions and bcrypt password hashing
+- Mocha and Chai tests
 
-## Getting Started
+## Setup
 
-- Install all dependencies (using the `npm install` command).
-- Run the development web server using the `node express_server.js` command.
+1. Install Node.js and npm.
+2. Run `npm install`.
+3. Start the development server with `npm start`.
+4. Visit the local address reported by the server. Run tests with `npm test`.
+
+This repository is an earlier full-stack programming exercise, **not a maintained production service**. It uses older dependencies and may require compatibility or security updates before reuse.
+
+The screenshots are stored in `docs/`, so links do not depend on an old GitHub username.
